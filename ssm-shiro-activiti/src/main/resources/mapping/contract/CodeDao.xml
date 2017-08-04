@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.twj.demo.dao.CodeDao">
+    
+	<sql id="codeColumns">
+		a.id AS "id",
+		a.areacode AS "areacode",
+		a.code AS "code",
+		a.date AS "date"
+	</sql>
+	
+	<sql id="codeJoins">
+	</sql>
+	
+    
+	<select id="get" resultType="cn.twj.demo.entity.Code" >
+		SELECT 
+			<include refid="codeColumns"/>
+		FROM code a
+		<include refid="codeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="cn.twj.demo.entity.Code" parameterType="cn.twj.demo.entity.Code">
+		SELECT 
+			<include refid="codeColumns"/>
+		FROM code a
+		<include refid="codeJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="areacode != null and areacode != ''">
+				AND a.areacode = #{areacode}
+			</if>
+			<if test="code != null and code != ''">
+				AND a.code = #{code}
+			</if>
+			<if test="date != null and date != ''">
+				AND a.date = #{date}
+			</if>
+		</where>
+
+	</select>
+	
+	<select id="findAllList" resultType="cn.twj.demo.entity.Code" >
+		SELECT 
+			<include refid="codeColumns"/>
+		FROM code a
+		<include refid="codeJoins"/>
+		<where>
+			
+		</where>		
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO code(
+			id,
+			areacode,
+			code,
+			date
+		) VALUES (
+			#{id},
+			#{areacode},
+			#{code},
+			#{date}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE code 
+		<set>
+		   <if test="areacode != null and areacode!=''">
+		    areacode = #{areacode},
+		    </if>
+		    <if test="code != null and code!=''">
+			code = #{code},
+			</if>
+			<if test="date != null and date!=''">
+			   date = #{date}
+			</if>
+		</set>
+		WHERE id = #{id} and code = #{ycode} -1
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM code
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE code SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="cn.twj.demo.entity.Code" statementType="STATEMENT">
+		select * FROM code  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>
