@@ -3,19 +3,28 @@
  */
 package cn.twj.demo.entity;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * 合同生成Entity
  * 
  * @author Cody
  * @version 2017-04-12
  */
+@ApiModel("代码对象")
 public class Code {
 
 	private static final long serialVersionUID = 1L;
+	@ApiModelProperty(value="主键ID",required=true)
 	private String id;
+	@ApiModelProperty(value="城市区号",required=true)
 	private String areacode; // 城市区号
+	@ApiModelProperty(value="合同序号",required=true)
 	private Integer code; // 合同序号
+	@ApiModelProperty(value="日期",required=true)
 	private String date; // 日期
+	@ApiModelProperty(value="年限",required=true)
 	private Integer ycode;
 
 	public Integer getYcode() {
