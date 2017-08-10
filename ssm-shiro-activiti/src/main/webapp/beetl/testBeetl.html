@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>社区金融后台管理—新增焦点图</title>
+    <link rel="stylesheet" type="text/css" href="/v0/style/pagination.css">
+    <link rel="stylesheet" type="text/css" href="/v0/style/New_focus_map.css">
+    <link rel="stylesheet" type="text/css" href="/v0/style/foundation-datepicker.css">
+    <link rel="stylesheet" type="text/css" href="/v0/style/jquery.datetimepicker.css"/>
+    <link rel="stylesheet" type="text/css" href="/v0/layui/css/layui.css">
+    <script type="text/javascript" src="/v0/Scripts/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="/v0/Scripts/jquery.pagination.js"></script>
+    <script type="text/javascript" src="/v0/Scripts/foundation-datepicker.js"></script>
+    <script type="text/javascript" src="/v0/Scripts/jquery.datetimepicker.full.js"></script>
+    <script type="text/javascript" src="/v0/layui/layui.js"></script>
+    <script type="text/javascript" src="/v0/common/common.js"></script>
+    <script type="text/javascript" src="/v0/Scripts/banner.create.js"></script>
+</head>
+<body>
+
+<section class="main_right">
+    <div class="main_right_top">
+        <h2>新建焦点图</h2>
+    </div>
+    <section class="main_right_center">
+        <p>
+            <label for="input_1">名称</label>
+            <input type="text" name="banner_title" id="input_1">
+        </p>
+        <p>
+            <label for="input_2">焦点图模块</label>
+            <select id="input_2" name="moduleId">
+                <option value="0">请选择</option>
+                
+            </select>
+        </p>
+        <p>
+            <label for="input_3">焦点图分类</label>
+            <select id="input_3" name="cate_id">
+                <option value="0">请选择</option>
+            </select>
+        </p>
+        <p>
+            <span>导航页配图</span>
+            <a class="upload"><input type="file" id="preview" accept="image/jpeg,image/x-png,image/gif,image/jpg" class="file_1">
+                <sub id='Headportrait_1'>
+                    <img src="/v0/images/upload_tu.jpg">
+                </sub></a>
+
+        </p>
+        <p class="main_right_center_Btn">
+            <button onclick="save()">保存</button>
+            <button onclick="window.location.href='/banner/list'">取消</button>
+        </p>
+    </section>
+</section>
+
+</section>
+</div>
+</body>
+</html>
+

@@ -217,7 +217,13 @@
 			<artifactId>freemarker</artifactId>
 			<version>2.3.21</version>
 		</dependency>
-
+		
+		<!-- Beetl -->
+		<dependency>
+            <groupId>org.beetl</groupId>
+            <artifactId>beetl-core</artifactId>
+            <version>2.2.1</version>
+        </dependency>
 		
 
 	</dependencies>

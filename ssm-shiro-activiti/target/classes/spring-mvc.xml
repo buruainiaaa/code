@@ -49,10 +49,11 @@
 		</property>
 	</bean>
 
-	<!-- SpringMVC注解驱动 -->
+	<!-- SpringMVC注解驱动 配置ResponseBody注解返回字符串 中文乱码的问题 -->
 	<mvc:annotation-driven>
 		<mvc:message-converters>
-			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
+			<bean
+				class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
 			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
 				<property name="supportedMediaTypes">
 					<list>
