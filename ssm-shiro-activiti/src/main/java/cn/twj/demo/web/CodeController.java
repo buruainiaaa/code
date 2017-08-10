@@ -24,7 +24,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 /**
- * 合同生成Controller
+ * Swagger-UI 框架
  * 
  * @author Cody
  * @version 2017-04-12
