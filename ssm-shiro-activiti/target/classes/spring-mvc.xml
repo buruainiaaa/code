@@ -29,6 +29,18 @@
 	<!-- Include a swagger configuration -->
 	<bean name="/swaggerConfig" class="cn.twj.demo.util.SwaggerConfig" />
 
+	<!-- Beetl config start -->
+	<bean id="beetlConfig" class="org.beetl.ext.spring.BeetlGroupUtilConfiguration"
+		init-method="init">
+	</bean>
+	<bean id="viewResolver" class="org.beetl.ext.spring.BeetlSpringViewResolver">
+		<property name="prefix" value="/beetl/" />
+		<property name="suffix" value=".html" />
+		<!-- <property name="order" value="0"/> <property name="config" ref="beetlConfig"/> -->
+		<property name="contentType" value="text/html;charset=UTF-8" />
+	</bean>
+	<!-- Beetl config end -->
+
 
 	<!--避免IE执行AJAX时，返回JSON出现下载文件 -->
 	<bean id="mappingJacksonHttpMessageConverter"

@@ -3,6 +3,7 @@ package cn.twj.demo.web;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 @RequestMapping("beetl")
 @Controller
@@ -10,8 +11,10 @@ public class BeetleController {
 
 	@RequestMapping("/testBeetl")
 	@ResponseBody
-	public String testBeetle(String testName){
+	public ModelAndView testBeetle(String testName){
 		
-		return testName;
+		ModelAndView mav=new ModelAndView();
+		mav.setViewName("testBeetl");
+		return mav;
 	}
 }

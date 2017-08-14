@@ -82,9 +82,9 @@
 	<!-- 拦截规则  -->
 	<filter-mapping>
 		<filter-name>HTMLFilter</filter-name>
-		<url-pattern>*.html</url-pattern>
+		<url-pattern>*.beet</url-pattern>
 	</filter-mapping>
-	<!-- Beetl End -->
+	<!-- 	Beetl End -->
 
 	<welcome-file-list>
 		<welcome-file>/index.jsp</welcome-file>
