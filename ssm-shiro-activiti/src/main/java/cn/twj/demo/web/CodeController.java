@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.twj.demo.entity.Code;
 import cn.twj.demo.service.CodeService;
+import junit.framework.Test;
 
 /**
  * 合同生成Controller
@@ -30,17 +31,11 @@ public class CodeController {
 	@Autowired
 	private CodeService codeService;
 
-	// @ModelAttribute
-	// public Code get(@RequestParam(required = false) String id) {
-	// Code entity = null;
-	// if (StringUtils.isNotBlank(id)) {
-	// entity = codeService.get(id);
-	// }
-	// if (entity == null) {
-	// entity = new Code();
-	// }
-	// return entity;
-	// }
+	@RequestMapping(value = { "test", "" })
+	@ResponseBody
+	public String test(String name){
+		return name;
+	}
 
 	/**
 	 * 合同生成列表页面
