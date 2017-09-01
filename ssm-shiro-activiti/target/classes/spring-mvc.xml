@@ -11,7 +11,9 @@
                         http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">  
   
     <!-- 自动扫描  @Controller-->  
-    <context:component-scan base-package="cn.twj.demo.web"/>  
+   <context:component-scan  base-package="cn.twj.demo" use-default-filters="false">
+    	<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>  
   
     <!--避免IE执行AJAX时，返回JSON出现下载文件 -->  
     <bean id="mappingJacksonHttpMessageConverter"  
@@ -31,11 +33,24 @@
         </property>  
     </bean>  
     
+    
+    <!-- 处理请求返回json字符串的中文乱码问题 -->
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>application/json;charset=UTF-8</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
   
   
     <!-- 定义跳转的文件的前后缀 ，视图模式配置 -->  
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">  
-        <property name="prefix" value="/WEB-INF/jsp/" />  
+        <property name="prefix" value="/WEB-INF/view/" />  
         <property name="suffix" value=".jsp"/>  
     </bean>  
   
@@ -48,4 +63,6 @@
         <!-- 内存中的最大值 -->  
         <property name="maxInMemorySize" value="4096"/>  
     </bean>  
+    
+<!--     <import resource="classpath:spring-shiro.xml"/> -->
 </beans>  

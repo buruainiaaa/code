@@ -7,8 +7,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import cn.twj.demo.HandTransactionException;
 import cn.twj.demo.dao.CodeDao;
 import cn.twj.demo.entity.Code;
 
@@ -26,6 +28,30 @@ public class CodeService {
 
 	public Code get(String id) {
 		return c_CodeDao.get(id);
+	}
+	
+	@Transactional(rollbackFor=Exception.class)
+	public void update() throws Exception{
+		Code code=new Code();
+		code.setCode(33);
+		code.setId("TXV001");
+		c_CodeDao.update(code);
+		
+//		code=new Code();
+//		code.setAreacode("456");
+//		code.setId("TXV001");
+//		c_CodeDao.update(code);
+		
+		
+		
+//		throw new HandTransactionException("sdfsadf");
+		try {
+			String a=null;
+			a.length();
+		} catch (Exception e) {
+			 throw new Exception(e);
+		}
+		
 	}
 
 	public List<Code> findList(Code code) {

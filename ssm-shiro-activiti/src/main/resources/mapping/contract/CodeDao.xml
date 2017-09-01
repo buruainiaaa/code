@@ -81,7 +81,7 @@
 			   date = #{date}
 			</if>
 		</set>
-		WHERE id = #{id} and code = #{ycode} -1
+		WHERE id = #{id} 
 	</update>
 	
 	

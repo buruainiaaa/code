@@ -3,17 +3,33 @@
  */
 package cn.twj.demo.web;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.security.auth.Subject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.ibatis.reflection.wrapper.BaseWrapper;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.DisabledAccountException;
+import org.apache.shiro.authc.ExcessiveAttemptsException;
+import org.apache.shiro.authc.ExpiredCredentialsException;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.LockedAccountException;
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.TransactionException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mysql.fabric.xmlrpc.base.Array;
+
+import cn.twj.demo.HandTransactionException;
 import cn.twj.demo.entity.Code;
 import cn.twj.demo.service.CodeService;
 
@@ -42,15 +58,100 @@ public class CodeController {
 	// return entity;
 	// }
 
+	@RequestMapping(value = "/")
+	public String showPage(String viewName, Model model) {
+		model.addAttribute("message", "");
+		return viewName;
+	}
+
+	@RequestMapping(value = "login")
+	public String login(HttpServletRequest request, HttpServletResponse response, Model model) {
+		String loginName = request.getParameter("loginName");
+		String password = request.getParameter("password");
+		String msg = "";
+		UsernamePasswordToken token = new UsernamePasswordToken(loginName, password);
+		token.setRememberMe(true);
+		org.apache.shiro.subject.Subject subject = SecurityUtils.getSubject();
+		try {
+			subject.login(token);
+			if (subject.isAuthenticated()) {
+				model.addAttribute("loginName", loginName);
+				return "index";
+			} else {
+				return "codeList";
+			}
+		} catch (IncorrectCredentialsException e) {
+			msg = "登录密码错误. Password for account " + token.getPrincipal() + " was incorrect.";
+			model.addAttribute("message", msg);
+			System.out.println(msg);
+		} catch (ExcessiveAttemptsException e) {
+			msg = "登录失败次数过多";
+			model.addAttribute("message", msg);
+			System.out.println(msg);
+		} catch (LockedAccountException e) {
+			msg = "帐号已被锁定. The account for username " + token.getPrincipal() + " was locked.";
+			model.addAttribute("message", msg);
+			System.out.println(msg);
+		} catch (DisabledAccountException e) {
+			msg = "帐号已被禁用. The account for username " + token.getPrincipal() + " was disabled.";
+			model.addAttribute("message", msg);
+			System.out.println(msg);
+		} catch (ExpiredCredentialsException e) {
+			msg = "帐号已过期. the account for username " + token.getPrincipal() + "  was expired.";
+			model.addAttribute("message", msg);
+			System.out.println(msg);
+		} catch (UnknownAccountException e) {
+			msg = "帐号不存在. There is no user with username of " + token.getPrincipal();
+			model.addAttribute("message", msg);
+			System.out.println(msg);
+		} catch (UnauthorizedException e) {
+			msg = "您没有得到相应的授权！" + e.getMessage();
+			model.addAttribute("message", msg);
+			System.out.println(msg);
+		}
+		return "codeList";
+	}
+
+	/**
+	 * 测试事物机制
+	 */
+	@RequestMapping(value = "update")
+	@ResponseBody
+	public String update(HttpServletRequest request, HttpServletResponse response, Model model) {
+
+		try {
+			codeService.update();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return "OK";
+	}
+
 	/**
 	 * 合同生成列表页面
 	 */
-	@RequestMapping(value = { "list", "" })
+	@RequestMapping(value = "list")
 	@ResponseBody
 	public List<Code> list(Code code, HttpServletRequest request, HttpServletResponse response, Model model) {
 		List<Code> page = codeService.findList(code);
 		// model.addAttribute("page", page);
 		return page;
+	}
+
+	/**
+	 * 合同生成列表页面
+	 */
+	@RequestMapping(value = "testEncode")
+	@ResponseBody
+	public List<String> testEncode(Code code, HttpServletRequest request, HttpServletResponse response, Model model) {
+		// List<Code> page = codeService.findList(code);
+		String s = "唐文金";
+		// model.addAttribute("page", page);
+		List<String> list = new ArrayList<String>();
+		list.add(s);
+		return list;
 	}
 
 	/**
@@ -61,129 +162,5 @@ public class CodeController {
 		model.addAttribute("code", code);
 		return "modules/code/codeForm";
 	}
-
-	// /**
-	// * 保存合同生成
-	// */
-	// @RequiresPermissions(value = { "code:code:add", "code:code:edit" },
-	// logical = Logical.OR)
-	// @RequestMapping(value = "save")
-	// public String save(Code code, Model model, RedirectAttributes
-	// redirectAttributes) throws Exception {
-	// if (!beanValidator(model, code)) {
-	// return form(code, model);
-	// }
-	// if (!code.getIsNewRecord()) {// 编辑表单保存
-	// Code t = codeService.get(code.getId());// 从数据库取出记录的值
-	// MyBeanUtils.copyBeanNotNull2Bean(code, t);// 将编辑表单中的非NULL值覆盖数据库记录中的值
-	// codeService.save(t);// 保存
-	// } else {// 新增表单保存
-	// codeService.save(code);// 保存
-	// }
-	// addMessage(redirectAttributes, "保存合同生成成功");
-	// return "redirect:" + Global.getAdminPath() + "/code/code/?repage";
-	// }
-
-	// /**
-	// * 删除合同生成
-	// */
-	// @RequiresPermissions("code:code:del")
-	// @RequestMapping(value = "delete")
-	// public String delete(Code code, RedirectAttributes redirectAttributes) {
-	// codeService.delete(code);
-	// addMessage(redirectAttributes, "删除合同生成成功");
-	// return "redirect:" + Global.getAdminPath() + "/code/code/?repage";
-	// }
-	//
-	// /**
-	// * 批量删除合同生成
-	// */
-	// @RequiresPermissions("code:code:del")
-	// @RequestMapping(value = "deleteAll")
-	// public String deleteAll(String ids, RedirectAttributes
-	// redirectAttributes) {
-	// String idArray[] = ids.split(",");
-	// for (String id : idArray) {
-	// codeService.delete(codeService.get(id));
-	// }
-	// addMessage(redirectAttributes, "删除合同生成成功");
-	// return "redirect:" + Global.getAdminPath() + "/code/code/?repage";
-	// }
-	//
-	// /**
-	// * 导出excel文件
-	// */
-	// @RequiresPermissions("code:code:export")
-	// @RequestMapping(value = "export", method = RequestMethod.POST)
-	// public String exportFile(Code code, HttpServletRequest request,
-	// HttpServletResponse response,
-	// RedirectAttributes redirectAttributes) {
-	// try {
-	// String fileName = "合同生成" + DateUtils.getDate("yyyyMMddHHmmss") + ".xlsx";
-	// Page<Code> page = codeService.findPage(new Page<Code>(request, response,
-	// -1), code);
-	// new ExportExcel("合同生成",
-	// Code.class).setDataList(page.getList()).write(response,
-	// fileName).dispose();
-	// return null;
-	// } catch (Exception e) {
-	// addMessage(redirectAttributes, "导出合同生成记录失败！失败信息：" + e.getMessage());
-	// }
-	// return "redirect:" + Global.getAdminPath() + "/code/code/?repage";
-	// }
-	//
-	// /**
-	// * 导入Excel数据
-	// *
-	// */
-	// @RequiresPermissions("code:code:import")
-	// @RequestMapping(value = "import", method = RequestMethod.POST)
-	// public String importFile(MultipartFile file, RedirectAttributes
-	// redirectAttributes) {
-	// try {
-	// int successNum = 0;
-	// int failureNum = 0;
-	// StringBuilder failureMsg = new StringBuilder();
-	// ImportExcel ei = new ImportExcel(file, 1, 0);
-	// List<Code> list = ei.getDataList(Code.class);
-	// for (Code code : list) {
-	// try {
-	// codeService.save(code);
-	// successNum++;
-	// } catch (ConstraintViolationException ex) {
-	// failureNum++;
-	// } catch (Exception ex) {
-	// failureNum++;
-	// }
-	// }
-	// if (failureNum > 0) {
-	// failureMsg.insert(0, "，失败 " + failureNum + " 条合同生成记录。");
-	// }
-	// addMessage(redirectAttributes, "已成功导入 " + successNum + " 条合同生成记录" +
-	// failureMsg);
-	// } catch (Exception e) {
-	// addMessage(redirectAttributes, "导入合同生成失败！失败信息：" + e.getMessage());
-	// }
-	// return "redirect:" + Global.getAdminPath() + "/code/code/?repage";
-	// }
-	//
-	// /**
-	// * 下载导入合同生成数据模板
-	// */
-	// @RequiresPermissions("code:code:import")
-	// @RequestMapping(value = "import/template")
-	// public String importFileTemplate(HttpServletResponse response,
-	// RedirectAttributes redirectAttributes) {
-	// try {
-	// String fileName = "合同生成数据导入模板.xlsx";
-	// List<Code> list = Lists.newArrayList();
-	// new ExportExcel("合同生成数据", Code.class,
-	// 1).setDataList(list).write(response, fileName).dispose();
-	// return null;
-	// } catch (Exception e) {
-	// addMessage(redirectAttributes, "导入模板下载失败！失败信息：" + e.getMessage());
-	// }
-	// return "redirect:" + Global.getAdminPath() + "/code/code/?repage";
-	// }
 
 }

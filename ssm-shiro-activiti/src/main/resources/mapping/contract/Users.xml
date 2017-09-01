@@ -3,10 +3,7 @@
 <mapper namespace="cn.twj.demo.dao.CodeDao">
     
 	<sql id="codeColumns">
-		a.id AS "id",
-		a.areacode AS "areacode",
-		a.code AS "code",
-		a.date AS "date"
+		
 	</sql>
 	
 	<sql id="codeJoins">
@@ -67,41 +64,5 @@
 			#{date}
 		)
 	</insert>
-	
-	<update id="update">
-		UPDATE code 
-		<set>
-		   <if test="areacode != null and areacode!=''">
-		    areacode = #{areacode},
-		    </if>
-		    <if test="code != null and code!=''">
-			code = #{code},
-			</if>
-			<if test="date != null and date!=''">
-			   date = #{date}
-			</if>
-		</set>
-		WHERE id = #{id} 
-	</update>
-	
-	
-	<!--物理删除-->
-	<update id="delete">
-		DELETE FROM code
-		WHERE id = #{id}
-	</update>
-	
-	<!--逻辑删除-->
-	<update id="deleteByLogic">
-		UPDATE code SET 
-			del_flag = #{DEL_FLAG_DELETE}
-		WHERE id = #{id}
-	</update>
-	
-	
-	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
-	<select id="findUniqueByProperty" resultType="cn.twj.demo.entity.Code" statementType="STATEMENT">
-		select * FROM code  where ${propertyName} = '${value}'
-	</select>
 	
 </mapper>
