@@ -1,30 +1,57 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.twj.demo.dao.CodeDao">
-    
+<mapper namespace="cn.twj.demo.dao.UserDao">
+
 	<sql id="codeColumns">
-		
+		id,
+		company_id,
+		office_id,
+		login_name,
+		password,
+		no,
+		name,
+		email,
+		phone,
+		mobile,
+		user_type,
+		photo,
+		login_ip,
+		login_date,
+		login_flag,
+		create_by,
+		create_date,
+		update_by,
+		update_date,
+		remarks,
+		del_flag,
+		qrcode,
+		sign
+
 	</sql>
-	
-	<sql id="codeJoins">
-	</sql>
-	
-    
-	<select id="get" resultType="cn.twj.demo.entity.Code" >
-		SELECT 
-			<include refid="codeColumns"/>
-		FROM code a
-		<include refid="codeJoins"/>
+
+
+
+
+	<select id="get" resultType="cn.twj.demo.entity.User">
+		SELECT
+		<include refid="codeColumns" />
+		FROM sys_user a
 		WHERE a.id = #{id}
 	</select>
 	
-	<select id="findList" resultType="cn.twj.demo.entity.Code" parameterType="cn.twj.demo.entity.Code">
-		SELECT 
-			<include refid="codeColumns"/>
+	<select id="getUserByName" resultType="cn.twj.demo.entity.User">
+		SELECT
+		<include refid="codeColumns" />
+		FROM sys_user a
+		WHERE a.login_name = #{name} or a.mobile = #{name} or a.phone = #{name} or a.email = #{name} or a.name = #{name} 
+	</select>
+
+	<select id="findList" resultType="cn.twj.demo.entity.User"
+		parameterType="cn.twj.demo.entity.Code">
+		SELECT
+		<include refid="codeColumns" />
 		FROM code a
-		<include refid="codeJoins"/>
 		<where>
-			
 			<if test="id != null and id != ''">
 				AND a.id = #{id}
 			</if>
@@ -40,29 +67,28 @@
 		</where>
 
 	</select>
-	
-	<select id="findAllList" resultType="cn.twj.demo.entity.Code" >
-		SELECT 
-			<include refid="codeColumns"/>
+
+	<select id="findAllList" resultType="cn.twj.demo.entity.Code">
+		SELECT
+		<include refid="codeColumns" />
 		FROM code a
-		<include refid="codeJoins"/>
 		<where>
-			
-		</where>		
+
+		</where>
 	</select>
-	
+
 	<insert id="insert">
 		INSERT INTO code(
-			id,
-			areacode,
-			code,
-			date
+		id,
+		areacode,
+		code,
+		date
 		) VALUES (
-			#{id},
-			#{areacode},
-			#{code},
-			#{date}
+		#{id},
+		#{areacode},
+		#{code},
+		#{date}
 		)
 	</insert>
-	
+
 </mapper>
